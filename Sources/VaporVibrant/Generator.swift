@@ -83,7 +83,6 @@ public class Generator {
             return 1 - abs(value - targetValue)
         }
         
-        
         return weightedMean(
             values: invertDiff(value: saturation, targetValue: targetSaturation), opts.weightSaturation,
             invertDiff(value: luma, targetValue: targetLuma), opts.weightLuma,

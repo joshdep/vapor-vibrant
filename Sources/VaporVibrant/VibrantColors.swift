@@ -120,7 +120,8 @@ public class Swatch: Codable, Equatable {
     }
     
     public static func == (lhs: Swatch, rhs: Swatch) -> Bool {
-        return lhs.rgb == rhs.rgb
+        let diff = rgbDiff(lhs.rgb, rhs.rgb)
+        return diff <= Double(DELTAE94_DIFF_STATUS.PERFECT)
     }
 
     init(_ rgb: RGB, _ population: Int) {

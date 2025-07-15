@@ -9,11 +9,11 @@
 import Foundation
 
 struct DELTAE94_DIFF_STATUS {
-    static let NA:Int = 0
-    static let PERFECT:Int = 1
-    static let CLOSE:Int = 2
-    static let GOOD:Int = 10
-    static let SIMILAR:Int = 50
+    static let NA: Int = 0
+    static let PERFECT: Int = 1
+    static let CLOSE: Int = 2
+    static let GOOD: Int = 10
+    static let SIMILAR: Int = 50
 }
 
 struct newErr: Error {
