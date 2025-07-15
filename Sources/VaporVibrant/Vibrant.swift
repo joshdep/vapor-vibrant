@@ -37,7 +37,7 @@ public class Vibrant {
     private var _palette: Palette?
     public var palette: Palette? { _palette }
     
-    public init(src: Image, opts: Options?) {
+    public init(src: Image, opts: Options? = nil) {
         self.src = src
         self.opts = opts ?? Options()
         self.opts.combinedFilter = Filter.combineFilters(filters: self.opts.filters)
