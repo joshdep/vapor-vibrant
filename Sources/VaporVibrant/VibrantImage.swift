@@ -77,9 +77,23 @@ public class VibrantImage {
     }
     
     private static func makeBytes(from image: Image) -> [UInt8]? {
-        guard let data = try? image.export() else {
-            return nil
+        let width = image.size.width
+        let height = image.size.height
+        var bytes: [UInt8] = []
+
+        for y in 0..<height {
+            for x in 0..<width {
+                let color = image.get(pixel: Point(x: x, y: y))
+                let r = UInt8((color.redComponent * 255).rounded())
+                let g = UInt8((color.greenComponent * 255).rounded())
+                let b = UInt8((color.blueComponent * 255).rounded())
+                let a = UInt8((color.alphaComponent * 255).rounded()) // Usually 1.0 unless transparency is present
+
+                bytes.append(contentsOf: [r, g, b, a])
+            }
         }
-        return [UInt8](data)
+
+        return bytes
     }
+
 }
