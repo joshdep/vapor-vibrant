@@ -13,7 +13,7 @@ public typealias XYZ = (x: Double, y: Double, z: Double)
 public typealias LAB = (L: Double, a: Double, b: Double)
 public typealias HEX = String
 
-public struct Palette {
+public struct Palette: Codable {
     public var Vibrant: Swatch?
     public var Muted: Swatch?
     public var DarkVibrant: Swatch?
@@ -22,7 +22,7 @@ public struct Palette {
     public var LightMuted: Swatch?
 }
 
-public class Swatch: Equatable {
+public class Swatch: Codable, Equatable {
     
     private var _hsl: HSL?
 
@@ -126,5 +126,29 @@ public class Swatch: Equatable {
     init(_ rgb: RGB, _ population: Int) {
         self._rgb = rgb
         self._population = population
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case _hex
+        case _population
+    }
+    
+    required public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let hex = try container.decode(HEX.self, forKey: ._hex)
+        guard let rgb = hexToRgb(hex) else {
+            throw DecodingError.dataCorrupted(DecodingError.Context(
+                codingPath: decoder.codingPath,
+                debugDescription: "Invalid hex code: \(hex)"
+            ))
+        }
+        self._rgb = rgb
+        self._population = try container.decode(Int.self, forKey: ._population)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(hex, forKey: ._hex)
+        try container.encode(_population, forKey: ._population)
     }
 }
