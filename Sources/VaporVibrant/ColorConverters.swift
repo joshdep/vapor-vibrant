@@ -7,8 +7,6 @@
 //
 
 import Foundation
-import UIKit
-
 
 struct DELTAE94_DIFF_STATUS {
     static let NA:Int = 0
@@ -18,8 +16,6 @@ struct DELTAE94_DIFF_STATUS {
     static let SIMILAR:Int = 50
 }
 
-//public typealias Double = Double
-
 struct newErr: Error {
     init(_ message: String) {
         self.message = message
@@ -27,30 +23,7 @@ struct newErr: Error {
     let message: String
 }
 
-public func uiColorToRgb(_ color: UIColor)->RGB {
-    var r: CGFloat = 0
-    var g: CGFloat = 0
-    var b: CGFloat = 0
-    color.getRed(&r, green: &g, blue: &b, alpha: nil)
-    return (UInt8(r * 255), UInt8(g * 255), UInt8(b * 255))
-}
-
-public func rgbToUIColor(_ r: UInt8, _ g: UInt8, _ b: UInt8)->UIColor {
-    return UIColor.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: 1)
-}
-public func uiColorToHsl(_ color: UIColor)->HSL {
-    var h:CGFloat = 0
-    var s:CGFloat = 0
-    var l:CGFloat = 0
-    color.getHue(&h, saturation: &s, brightness: &l, alpha: nil)
-    return (Double(h),Double(s),Double(l))
-}
-public func hslToUIColor(_ h: Double, _ s: Double, _ l: Double)->UIColor {
-    return UIColor.init(hue: CGFloat(h), saturation: CGFloat(s), brightness: CGFloat(l), alpha: 1)
-}
-
-
-public func hexToRgb(_ hex: String)->RGB? {
+public func hexToRgb(_ hex: HEX) -> RGB? {
     let r, g, b: UInt8
     
     if hex.hasPrefix("#") {
@@ -74,47 +47,45 @@ public func hexToRgb(_ hex: String)->RGB? {
     return nil
 }
 
-
-
-public func rgbToHex(_ r: UInt8, _ g: UInt8, _ b: UInt8)->String {
+public func rgbToHex(_ r: UInt8, _ g: UInt8, _ b: UInt8) -> String {
     return "#" + String(format:"%02X", r) + String(format:"%02X", g) + String(format:"%02X", b)
 }
 
-public func rgbToHsl(r: UInt8, g: UInt8, b: UInt8)-> Vec3<Double> {
+public func rgbToHsl(r: UInt8, g: UInt8, b: UInt8) -> Vec3<Double> {
     let r = Double(r) / 255
-  let g = Double(g) / 255
-  let b = Double(b) / 255
-  let maxVal = max(r, g, b)
-  let minVal = min(r, g, b)
-  var h: Double
-  let s: Double
-  let l = (maxVal + minVal) / 2
-  if (maxVal == minVal) {
-    h = 0
-    s = 0
-  } else {
-    let d = maxVal - minVal
-    s = l > 0.5 ? d / (2 - maxVal - minVal) : d / (maxVal + minVal)
-    switch (maxVal) {
-      case r:
-        h = (g - b) / d + (g < b ? 6 : 0)
-        break
-      case g:
-        h = (b - r) / d + 2
-        break
-      case b:
-        h = (r - g) / d + 4
-        break
-        default:
-            h = 0
-        break
+    let g = Double(g) / 255
+    let b = Double(b) / 255
+    let maxVal = max(r, g, b)
+    let minVal = min(r, g, b)
+    var h: Double
+    let s: Double
+    let l = (maxVal + minVal) / 2
+    if (maxVal == minVal) {
+        h = 0
+        s = 0
+    } else {
+        let d = maxVal - minVal
+        s = l > 0.5 ? d / (2 - maxVal - minVal) : d / (maxVal + minVal)
+        switch (maxVal) {
+          case r:
+            h = (g - b) / d + (g < b ? 6 : 0)
+            break
+          case g:
+            h = (b - r) / d + 2
+            break
+          case b:
+            h = (r - g) / d + 4
+            break
+            default:
+                h = 0
+            break
+        }
+        h /= 6
     }
-    h /= 6
-  }
-  return (h, s, l)
+    return (h, s, l)
 }
 
-public func hslToRgb(_ h: Double, _ s: Double, _ l: Double)-> RGB {
+public func hslToRgb(_ h: Double, _ s: Double, _ l: Double) -> RGB {
     var r: Double
     var g: Double
     var b: Double
@@ -147,8 +118,7 @@ public func hslToRgb(_ h: Double, _ s: Double, _ l: Double)-> RGB {
     )
 }
 
-
-public func rgbToXyz(_ r: UInt8, _ g: UInt8, _ b: UInt8)->XYZ {
+public func rgbToXyz(_ r: UInt8, _ g: UInt8, _ b: UInt8) -> XYZ {
     var r = Double(r) / 255
     var g = Double(g) / 255
     var b = Double(b) / 255
@@ -168,7 +138,7 @@ public func rgbToXyz(_ r: UInt8, _ g: UInt8, _ b: UInt8)->XYZ {
     return (x: x,y: y,z: z)
 }
 
-public func xyzToCIELab(_ x: Double, _ y: Double, _ z: Double)-> LAB {
+public func xyzToCIELab(_ x: Double, _ y: Double, _ z: Double) -> LAB {
     let REF_X: Double = 95.047
     let REF_Y: Double = 100
     let REF_Z: Double = 108.883
@@ -189,12 +159,12 @@ public func xyzToCIELab(_ x: Double, _ y: Double, _ z: Double)-> LAB {
 }
 
 
-public func rgbToCIELab(_ r: UInt8, _ g: UInt8, _ b: UInt8)->LAB {
+public func rgbToCIELab(_ r: UInt8, _ g: UInt8, _ b: UInt8) -> LAB {
     let (x,y,z) = rgbToXyz(r, g, b)
     return xyzToCIELab(x, y, z)
 }
 
-public func deltaE94(_ lab1: Vec3<Double>, _ lab2: Vec3<Double>)->Double {
+public func deltaE94(_ lab1: Vec3<Double>, _ lab2: Vec3<Double>) -> Double {
     let WEIGHT_L:Double = 1
     let WEIGHT_C:Double = 1
     let WEIGHT_H:Double = 1
@@ -226,19 +196,19 @@ public func deltaE94(_ lab1: Vec3<Double>, _ lab2: Vec3<Double>)->Double {
     return sqrt(xDL * xDL + xDC * xDC + xDH * xDH)
 }
 
-public func rgbDiff(_ rgb1: RGB, _ rgb2: RGB)->Double {
+public func rgbDiff(_ rgb1: RGB, _ rgb2: RGB) -> Double {
     let lab1 = apply(rgbToCIELab, rgb1)
     let lab2 = apply(rgbToCIELab, rgb2)
     return deltaE94(lab1, lab2)
 }
 
-public func hexDiff(_ hex1: String, _ hex2: String)->Double {
+public func hexDiff(_ hex1: String, _ hex2: String) -> Double {
     let rgb1 = hexToRgb(hex1)!
     let rgb2 = hexToRgb(hex2)!
     return rgbDiff(rgb1, rgb2)
 }
 
-public func getColorDiffStatus(_ d: Int)->String {
+public func getColorDiffStatus(_ d: Int) -> String {
     if (d < DELTAE94_DIFF_STATUS.NA) { return "N/A" }
     // Not perceptible by human eyes
     if (d <= DELTAE94_DIFF_STATUS.PERFECT) { return "Perfect" }

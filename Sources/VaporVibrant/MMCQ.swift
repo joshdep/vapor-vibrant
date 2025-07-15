@@ -18,7 +18,6 @@
 //  https://github.com/SvenWoltmann/color-thief-java
 
 import Foundation
-import UIKit
 
 /// MMCQ (modified median cut quantization) algorithm from
 /// the Leptonica library (http://www.leptonica.com/).
@@ -41,10 +40,6 @@ public struct Color {
         self.r = r
         self.g = g
         self.b = b
-    }
-    
-    public func makeUIColor() -> UIColor {
-        return UIColor(red: CGFloat(r) / CGFloat(255), green: CGFloat(g) / CGFloat(255), blue: CGFloat(b) / CGFloat(255), alpha: CGFloat(1))
     }
 }
 

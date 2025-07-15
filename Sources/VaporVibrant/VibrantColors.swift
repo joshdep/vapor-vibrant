@@ -6,17 +6,12 @@
 //  Copyright © 2020 Bryce Dougherty. All rights reserved.
 //
 
-import UIKit
-
 public typealias Vec3<T> = (T, T, T)
 public typealias RGB = (r: UInt8, g: UInt8, b: UInt8)
 public typealias HSL = (h: Double, s: Double, l: Double)
 public typealias XYZ = (x: Double, y: Double, z: Double)
 public typealias LAB = (L: Double, a: Double, b: Double)
-
-
-//export type Vec3 = [Double, Double, Double]
-//
+public typealias HEX = String
 
 public struct Palette {
     public var Vibrant: Swatch?
@@ -37,9 +32,7 @@ public class Swatch: Equatable {
 
     private var _population: Int
 
-    private var _hex: String?
-    
-    private var _uiColor: UIColor?
+    private var _hex: HEX?
 
     var r: UInt8 { self._rgb.r }
 
@@ -57,21 +50,12 @@ public class Swatch: Equatable {
         return self._hsl!
     }
 
-    public var hex: String {
+    public var hex: HEX {
         if self._hex == nil {
             let rgb = self._rgb
             self._hex = apply(rgbToHex, rgb)
         }
         return self._hex!
-    }
-
-    
-    public var uiColor: UIColor {
-        if self._uiColor == nil {
-            let rgb = self._rgb
-            self._uiColor = apply(rgbToUIColor, rgb)
-        }
-        return self._uiColor!
     }
     
     static func applyFilter(colors: [Swatch], filter: Filter)->[Swatch] {
@@ -88,16 +72,16 @@ public class Swatch: Equatable {
     public var population: Int { self._population }
 
     
-    func toDict()->[String: Any] {
+    func toDict() -> [String: Any] {
         return [
             "rgb": self.rgb,
             "population": self.population
-            ]
+        ]
     }
     
     var toJSON = toDict
 
-    private func getYiq()->Double {
+    private func getYiq() -> Double {
         if self._yiq == nil {
             let (r,g,b) = self._rgb
             let mr = Int(r) * 299
@@ -109,29 +93,29 @@ public class Swatch: Equatable {
         return self._yiq!
     }
 
-    private var _titleTextColor: UIColor?
+    private var _titleTextColor: HEX?
 
-    private var _bodyTextColor: UIColor?
+    private var _bodyTextColor: HEX?
 
-    public var titleTextColor: UIColor {
+    public var titleTextColor: HEX {
         if self._titleTextColor == nil {
-            self._titleTextColor = self.getYiq() < 200 ? .white : .black
+            self._titleTextColor = self.getYiq() < 200 ? "#FFF" : "#000"
         }
         return self._titleTextColor!
     }
 
-    public var bodyTextColor: UIColor {
+    public var bodyTextColor: HEX {
         if self._bodyTextColor == nil {
-            self._bodyTextColor = self.getYiq() < 150 ? .white : .black
+            self._bodyTextColor = self.getYiq() < 150 ? "#FFF" : "#000"
         }
         return self._bodyTextColor!
     }
 
-    public func getTitleTextColor()->UIColor {
+    public func getTitleTextColor() -> HEX {
         return self.titleTextColor
     }
 
-    public func getBodyTextColor()->UIColor {
+    public func getBodyTextColor() -> HEX {
         return self.bodyTextColor
     }
     
@@ -143,6 +127,4 @@ public class Swatch: Equatable {
         self._rgb = rgb
         self._population = population
     }
-
-
 }

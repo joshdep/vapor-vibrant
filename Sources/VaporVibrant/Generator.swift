@@ -11,7 +11,7 @@ import UIKit
 
 public class Generator {
     
-    public typealias generator = (_ swatches: [Swatch])->Palette
+    public typealias generator = (_ swatches: [Swatch]) -> Palette
     
     public struct Options {
         var targetDarkLuma:  Double = 0.26
@@ -29,22 +29,23 @@ public class Generator {
         var weightLuma:  Double = 6.5
         var weightPopulation:  Double = 0.5
     }
+    
     var options: Options
+    
     init(options: Options) {
         self.options = options
     }
     
+    public static let defaultGenerator: generator = Generator(options: Options()).generate
     
-    public static let defaultGenerator:generator = Generator(options: Options()).generate
-    
-    private func generate(swatches: [Swatch])->Palette {
+    private func generate(swatches: [Swatch]) -> Palette {
         let maxPopulation = findMaxPopulation(swatches: swatches)
         var palette = generateVariationColors(swatches: swatches, maxPopulation: maxPopulation, opts: options)
         palette = generateEmptySwatches(palette: palette, opts: options)
         return palette
     }
     
-    func findMaxPopulation( swatches: [Swatch])->Int {
+    func findMaxPopulation( swatches: [Swatch]) -> Int {
         var p: Int = 0
         swatches.forEach { (s: Swatch) in
             p = max(p, s.population)
@@ -52,7 +53,7 @@ public class Generator {
         return p
     }
     
-    func isAlreadySelected (palette: Palette, s: Swatch)->Bool {
+    func isAlreadySelected (palette: Palette, s: Swatch) -> Bool {
         return palette.Vibrant == s ||
             palette.DarkVibrant == s ||
             palette.LightVibrant == s ||
@@ -66,7 +67,7 @@ public class Generator {
         luma: Double, targetLuma: Double,
         population: Int, maxPopulation: Int, opts: Options) -> Double {
         
-        func weightedMean (values: Double...)->Double {
+        func weightedMean (values: Double...) -> Double {
             var sum: Double = 0
             var weightSum: Double = 0
             var i = 0
@@ -80,7 +81,7 @@ public class Generator {
             return sum / weightSum
         }
         
-        func invertDiff (value: Double, targetValue: Double)->Double {
+        func invertDiff (value: Double, targetValue: Double) -> Double {
             return 1 - abs(value - targetValue)
         }
         
@@ -99,7 +100,7 @@ public class Generator {
                               targetSaturation: Double,
                               minSaturation: Double,
                               maxSaturation: Double,
-                              opts: Options)->Swatch? {
+                              opts: Options) -> Swatch? {
         
         var max: Swatch? = nil
         var maxValue: Double = 0
@@ -121,7 +122,7 @@ public class Generator {
         return max
     }
     
-    func generateVariationColors (swatches: [Swatch], maxPopulation: Int, opts: Options)->Palette {
+    func generateVariationColors (swatches: [Swatch], maxPopulation: Int, opts: Options) -> Palette {
         
         var palette = Palette()
         
@@ -187,8 +188,8 @@ public class Generator {
         return palette
         
     }
-    //
-    func generateEmptySwatches (palette: Palette, opts: Options)->Palette {
+    
+    func generateEmptySwatches (palette: Palette, opts: Options) -> Palette {
         
         var palette = palette
         //function _generateEmptySwatches (palette: Palette, maxPopulation: number, opts: DefaultGeneratorOptions): void {
@@ -241,16 +242,3 @@ public class Generator {
         return palette
     }
 }
-/**
- ````
- const DefaultGenerator: Generator = (swatches: Array<Swatch>, opts?: DefaultGeneratorOptions): Palette => {
- opts = <DefaultGeneratorOptions>defaults({}, opts, DefaultOpts)
- let maxPopulation = _findMaxPopulation(swatches)
- 
- let palette = _generateVariationColors(swatches, maxPopulation, opts)
- _generateEmptySwatches(palette, maxPopulation, opts)
- 
- return palette
- }
- ````
- */

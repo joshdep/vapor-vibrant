@@ -9,11 +9,11 @@
 import Foundation
 
 public class Quantizer {
-    public typealias quantizer = (_ pixels: [UInt8], _ options: Vibrant.Options)->[Swatch]
+    public typealias quantizer = (_ pixels: [UInt8], _ options: Vibrant.Options) -> [Swatch]
     
     public static let defaultQuantizer: quantizer = Quantizer().quantize
     
-    private func quantize(pixels: [UInt8], options: Vibrant.Options)->[Swatch] {
+    private func quantize(pixels: [UInt8], options: Vibrant.Options) -> [Swatch] {
         let quality = options.quality
         let colorcount = options.colorCount
         return Quantizer.vibrantQuantizer(pixels: pixels, quality: quality, colorCount: colorcount)
@@ -42,7 +42,7 @@ public class Quantizer {
         }
     }
     
-    static func vibrantQuantizer(pixels: [UInt8], quality: Int, colorCount: Int)->[Swatch] {
+    static func vibrantQuantizer(pixels: [UInt8], quality: Int, colorCount: Int) -> [Swatch] {
         let (hist, vbox) = makeHistogramAndVBox(from: pixels, quality: quality, ignoreWhite: false)
         var pq = [vbox]
         splitBoxes(&pq, Int(fractionByPopulation * Double(colorCount)), hist: hist)
@@ -53,7 +53,7 @@ public class Quantizer {
         return generateSwatches(pq)
     }
     
-    private static func generateSwatches (_ pq: [VBox])->[Swatch] {
+    private static func generateSwatches (_ pq: [VBox]) -> [Swatch] {
         return pq.map { (box) in
             let color = box.rgb()
             return Swatch(color, box.getCount())

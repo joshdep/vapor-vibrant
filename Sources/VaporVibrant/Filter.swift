@@ -9,7 +9,7 @@
 import Foundation
 
 public class Filter {
-    public typealias filterFunction = (_ red: UInt8, _ green: UInt8, _ blue: UInt8, _ alpha: UInt8)->Bool
+    public typealias filterFunction = (_ red: UInt8, _ green: UInt8, _ blue: UInt8, _ alpha: UInt8) -> Bool
     
     var f: filterFunction
     var id: String
@@ -24,7 +24,7 @@ public class Filter {
         self.id = id
     }
     
-    public static func combineFilters (filters: [Filter])->Filter? {
+    public static func combineFilters (filters: [Filter]) -> Filter? {
         if filters.count == 0 { return nil }
         let newFilterFunction:filterFunction = { r,g,b,a in
             if a == 0 { return false }

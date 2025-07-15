@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import UIKit
+import SwiftGD
 
 public class Vibrant {
     
@@ -27,30 +27,29 @@ public class Vibrant {
         fileprivate var combinedFilter: Filter?
     }
     
-    public static func from( _ src: UIImage)->Builder {
+    public static func from( _ src: Image) -> Builder {
         return Builder(src)
     }
 
     var opts: Options
-    var src: UIImage
+    var src: Image
     
     private var _palette: Palette?
     public var palette: Palette? { _palette }
     
-    public init(src: UIImage, opts: Options?) {
+    public init(src: Image, opts: Options?) {
         self.src = src
         self.opts = opts ?? Options()
         self.opts.combinedFilter = Filter.combineFilters(filters: self.opts.filters)
     }
     
-    static func process(image: Image, opts: Options)->Palette {
+    static func process(image: VibrantImage, opts: Options) -> Palette {
         let quantizer = opts.quantizer
         let generator = opts.generator
         let combinedFilter = opts.combinedFilter!
         let maxDimension = opts.maxDimension
         
         image.scaleTo(size: maxDimension, quality: opts.quality)
-        
         
         let imageData = image.applyFilter(combinedFilter)
         let swatches = quantizer(imageData, opts)
@@ -68,8 +67,8 @@ public class Vibrant {
         }
     }
     
-    public func getPalette()->Palette {
-        let image = Image(image: self.src)
+    public func getPalette() -> Palette {
+        let image = VibrantImage(image: self.src)
         let palette = Vibrant.process(image: image, opts: self.opts)
         self._palette = palette
         return palette

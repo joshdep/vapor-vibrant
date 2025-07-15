@@ -1,4 +1,4 @@
-# SwiftVibrantium (an SPM offshoot of swift-vibrant)
+# VaporVibrant (a Vapor compatible version of SwiftVibrantium)
 
 Generate a color palette from a UIImage. 
 
