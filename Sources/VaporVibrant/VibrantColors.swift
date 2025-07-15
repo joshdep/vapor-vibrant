@@ -129,26 +129,28 @@ public class Swatch: Codable, Equatable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case _hex
-        case _population
+        case rgb
+        case population
     }
     
     required public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let hex = try container.decode(HEX.self, forKey: ._hex)
-        guard let rgb = hexToRgb(hex) else {
-            throw DecodingError.dataCorrupted(DecodingError.Context(
-                codingPath: decoder.codingPath,
-                debugDescription: "Invalid hex code: \(hex)"
-            ))
+        let rgbString: String = try container.decode(String.self, forKey: .rgb)
+        let rgbParts = rgbString.replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "").split(separator: ",")
+        guard let r = UInt8(rgbParts[0]), let g = UInt8(rgbParts[1]), let b = UInt8(rgbParts[2]) else {
+            throw DecodingError.valueNotFound(UInt8.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Invalid rgb code: \(rgbString)"))
         }
-        self._rgb = rgb
-        self._population = try container.decode(Int.self, forKey: ._population)
+        self._rgb = (r, g, b)
+        self._population = try container.decode(Int.self, forKey: .population)
     }
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(hex, forKey: ._hex)
-        try container.encode(_population, forKey: ._population)
+        
+        let (r,g,b) = self.rgb
+        let rgbString = "[\(r),\(g),\(b)]"
+        
+        try container.encode(rgbString, forKey: .rgb)
+        try container.encode(self._population, forKey: .population)
     }
 }
