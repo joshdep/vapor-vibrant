@@ -36,9 +36,9 @@ public func hexToRgb(_ hex: HEX) -> RGB? {
             
             
             if scanner.scanHexInt64(&hexDouble) {
-                r = UInt8(hexDouble & 0xff000000) >> 24
-                g = UInt8(hexDouble & 0x00ff0000) >> 16
-                b = UInt8(hexDouble & 0x0000ff00) >> 8
+                r = UInt8((hexDouble & 0xff000000) >> 24)
+                g = UInt8((hexDouble & 0x00ff0000) >> 16)
+                b = UInt8((hexDouble & 0x0000ff00) >> 8)
                 
                 return (r, g, b)
             }
