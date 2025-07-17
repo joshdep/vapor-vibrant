@@ -36,7 +36,7 @@ public class VibrantImage {
                 pixels[offset + 3] = 0
             }
         }
-        return imageData
+        return pixels
     }
     
     func getImageData() -> [UInt8]? {

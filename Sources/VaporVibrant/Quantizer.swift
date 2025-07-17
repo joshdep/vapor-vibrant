@@ -43,7 +43,7 @@ public class Quantizer {
     }
     
     static func vibrantQuantizer(pixels: [UInt8], quality: Int, colorCount: Int) -> [Swatch] {
-        let (hist, vbox) = makeHistogramAndVBox(from: pixels, quality: quality, ignoreWhite: false)
+        let (hist, vbox) = makeHistogramAndVBox(from: pixels, quality: quality)
         var pq = [vbox]
         splitBoxes(&pq, Int(fractionByPopulation * Double(colorCount)), hist: hist)
         pq.sort { (a, b) -> Bool in

@@ -72,6 +72,7 @@ public class Generator {
             while i < values.count {
                 let value = values[i]
                 let weight = values[i + 1]
+                if value == 0 || weight == 0 { continue }
                 sum += value * weight
                 weightSum += weight
                 i+=2

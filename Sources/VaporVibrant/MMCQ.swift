@@ -86,7 +86,7 @@ open class ColorMap {
 }
 
 /// Histo (1-d array, giving the number of pixels in each quantized region of color space), or null on error.
-internal func makeHistogramAndVBox(from pixels: [UInt8], quality: Int, ignoreWhite: Bool) -> ([Int], VBox) {
+internal func makeHistogramAndVBox(from pixels: [UInt8], quality: Int, ignoreWhite: Bool = false) -> ([Int], VBox) {
     var histogram = [Int](repeating: 0, count: histogramSize)
     var rMin = UInt8.max
     var rMax = UInt8.min
